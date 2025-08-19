@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: healthchecker-ing
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /health/$2
+    nginx.ingress.kubernetes.io/rewrite-trailing-slash: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: arch.homework
+    http:
+      paths:
+      - path: /health(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: healthchecker-svc
+            port:
+              number: 80
+      
+      - path: /otusapp/isakov_ii/health(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: healthchecker-svc
+            port:
+              number: 80

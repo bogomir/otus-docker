@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: healthchecker-dp
+  labels:
+    app: healthchecker-dp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: healthchecker-app
+  template:
+    metadata:
+      labels:
+        app: healthchecker-app
+    spec:
+      containers:
+      - name: healthchecker
+        image: bgmr/healthchecker:latest
+        ports:
+        - containerPort: 8000
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
